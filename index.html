@@ -6,22 +6,26 @@
 <title>Qlola Login</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
   * {
     box-sizing: border-box;
   }
+  
   body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
-    background: #1e5dbf; /* fallback solid blue */
+    /* Background gambar sesuai permintaan */
     background: linear-gradient(180deg, #b5d4f9 0%, #1e5dbf 100%);
-    background-image: url('https://i.ibb.co/BsQZvnN/pattern.png'); /* substitute with pattern from image if possible, else replicate with CSS */
-    background-repeat: repeat;
-    background-size: contain;
+    background-image: url('https://www.image2url.com/r2/default/images/1777431943112-2242ef21-bfb3-455d-ba0f-24dfdd03a1cd.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     color: #111;
     display: flex;
     flex-direction: column;
     height: 100vh;
   }
+
   .container {
     margin: 10px;
     background: transparent;
@@ -30,6 +34,7 @@
     flex-direction: column;
     justify-content: center;
   }
+  
   .time {
     position: fixed;
     top: 10px;
@@ -41,12 +46,13 @@
     user-select: none;
     z-index: 10;
   }
+  
   .lang-select {
     position: fixed;
     top: 10px;
     right: 10px;
-    background: #fff;
-    border-radius: 15px;
+    background: white;
+    border-radius: 10px;
     border: 1.5px solid #1e5dbf;
     padding: 5px 15px;
     font-weight: 600;
@@ -58,6 +64,7 @@
     user-select: none;
     z-index: 10;
   }
+  
   .lang-select::after {
     content: '';
     margin-left: 6px;
@@ -67,16 +74,19 @@
     padding: 4px;
     transform: rotate(45deg);
   }
+  
   .logo {
-    width: 160px;
+    width: 180px;
     margin: 0 auto 20px auto;
     display: block;
   }
+  
   h2 {
     margin: 0 0 15px 5px;
     color: #111;
     font-weight: 700;
   }
+  
   label {
     font-weight: 600;
     color: #222;
@@ -84,6 +94,7 @@
     margin-left: 5px;
     margin-top: 10px;
   }
+  
   input[type="text"],
   input[type="password"] {
     width: 100%;
@@ -95,38 +106,51 @@
     box-shadow: 0px 2px 5px rgb(0 0 0 / 0.2);
     outline: none;
     font-family: 'Roboto', sans-serif;
+    background: white;
+    color: #333;
   }
+  
+  /* Password wrapper dan alignment icon mata */
   .password-wrapper {
     position: relative;
     width: 100%;
   }
+  
   .toggle-password {
     position: absolute;
     right: 15px;
-    top: 47%;
+    top: 50%;
     transform: translateY(-50%);
     border: none;
     background: none;
     cursor: pointer;
     outline: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+  
   .toggle-password svg {
     width: 20px;
     height: 20px;
     fill: #777;
   }
+  
   .forgot-password {
     text-align: right;
     margin-top: 8px;
     font-weight: 600;
     font-size: 13px;
   }
+  
   .forgot-password a {
     color: #1e5dbf;
     text-decoration: underline;
     cursor: pointer;
   }
-  button {
+  
+  button[type="submit"] {
     width: 100%;
     border-radius: 10px;
     border: none;
@@ -138,6 +162,7 @@
     font-size: 16px;
     cursor: not-allowed;
   }
+  
   .help-section {
     margin-top: auto;
     margin-bottom: 20px;
@@ -146,6 +171,7 @@
     font-size: 14px;
     color: white;
   }
+  
   .help-section button {
     background: white;
     color: #1e5dbf;
@@ -158,7 +184,6 @@
     margin-left: 6px;
   }
 
-  /* Scrollbar hide on mobile */
   ::-webkit-scrollbar {
     display: none;
   }
@@ -173,7 +198,8 @@
 </div>
 
 <div class="container" role="main" aria-label="Login Form">
-  <img src="https://i.ibb.co/PczfWxZ/qlola-logo.png" alt="Qlola by BRI Logo" class="logo" />
+  <!-- Logo baru -->
+  <img src="https://www.image2url.com/r2/default/images/1777432399856-ad5dbb1e-2ba8-41b4-8c89-2f2497b83f57.jpeg" alt="Qlola by BRI Logo" class="logo" />
   
   <h2>Login</h2>
   
@@ -187,8 +213,7 @@
     <label for="password">Kata Sandi</label>
     <div class="password-wrapper">
       <input id="password" type="password" placeholder="Masukkan kata sandi anda" autocomplete="off" />
-      <button type="button" class="toggle-password" aria-label="Toggle Kata Sandi Visibility">
-        <!-- Eye icon -->
+      <button type="button" class="toggle-password" aria-label="Toggle Kata Sandi Visibility" tabindex="-1">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
           <circle cx="12" cy="12" r="2.5"/>
@@ -208,7 +233,7 @@
 </div>
 
 <script>
-  // Real-time clock for top-left
+  // Update jam realtime
   function updateTime() {
     const timeElem = document.getElementById('time');
     const now = new Date();
@@ -220,7 +245,7 @@
   setInterval(updateTime, 1000);
   updateTime();
 
-  // Toggle password visibility
+  // Toggle tipe input password/text
   const togglePwdBtn = document.querySelector('.toggle-password');
   const passwordInput = document.getElementById('password');
   togglePwdBtn.addEventListener('click', () => {
