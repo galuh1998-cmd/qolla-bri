@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Qlola Login</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #1e5dbf; /* fallback solid blue */
+    background: linear-gradient(180deg, #b5d4f9 0%, #1e5dbf 100%);
+    background-image: url('https://i.ibb.co/BsQZvnN/pattern.png'); /* substitute with pattern from image if possible, else replicate with CSS */
+    background-repeat: repeat;
+    background-size: contain;
+    color: #111;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  .container {
+    margin: 10px;
+    background: transparent;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .time {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    color: white;
+    font-weight: 300;
+    font-size: 18px;
+    font-family: monospace;
+    user-select: none;
+    z-index: 10;
+  }
+  .lang-select {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #fff;
+    border-radius: 15px;
+    border: 1.5px solid #1e5dbf;
+    padding: 5px 15px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1e5dbf;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    z-index: 10;
+  }
+  .lang-select::after {
+    content: '';
+    margin-left: 6px;
+    border: solid #1e5dbf;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 4px;
+    transform: rotate(45deg);
+  }
+  .logo {
+    width: 160px;
+    margin: 0 auto 20px auto;
+    display: block;
+  }
+  h2 {
+    margin: 0 0 15px 5px;
+    color: #111;
+    font-weight: 700;
+  }
+  label {
+    font-weight: 600;
+    color: #222;
+    display: block;
+    margin-left: 5px;
+    margin-top: 10px;
+  }
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    border-radius: 10px;
+    border: none;
+    padding: 12px 45px 12px 15px;
+    margin-top: 6px;
+    font-size: 14px;
+    box-shadow: 0px 2px 5px rgb(0 0 0 / 0.2);
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+  }
+  .password-wrapper {
+    position: relative;
+    width: 100%;
+  }
+  .toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 47%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+  }
+  .toggle-password svg {
+    width: 20px;
+    height: 20px;
+    fill: #777;
+  }
+  .forgot-password {
+    text-align: right;
+    margin-top: 8px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .forgot-password a {
+    color: #1e5dbf;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  button {
+    width: 100%;
+    border-radius: 10px;
+    border: none;
+    padding: 15px;
+    margin-top: 15px;
+    background-color: #bdbdbd;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: not-allowed;
+  }
+  .help-section {
+    margin-top: auto;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+    color: white;
+  }
+  .help-section button {
+    background: white;
+    color: #1e5dbf;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 20px;
+    padding: 8px 15px;
+    border: none;
+    cursor: pointer;
+    margin-left: 6px;
+  }
+
+  /* Scrollbar hide on mobile */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="time" id="time">09:30:10</div>
+
+<div class="lang-select" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+  ID
+</div>
+
+<div class="container" role="main" aria-label="Login Form">
+  <img src="https://i.ibb.co/PczfWxZ/qlola-logo.png" alt="Qlola by BRI Logo" class="logo" />
+  
+  <h2>Login</h2>
+  
+  <form>
+    <label for="corporateId">Corporate ID</label>
+    <input id="corporateId" type="text" placeholder="Masukkan Corporate ID Anda" autocomplete="off" />
+
+    <label for="userId">User ID</label>
+    <input id="userId" type="text" placeholder="Masukkan user ID anda" autocomplete="off" />
+
+    <label for="password">Kata Sandi</label>
+    <div class="password-wrapper">
+      <input id="password" type="password" placeholder="Masukkan kata sandi anda" autocomplete="off" />
+      <button type="button" class="toggle-password" aria-label="Toggle Kata Sandi Visibility">
+        <!-- Eye icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+          <circle cx="12" cy="12" r="2.5"/>
+        </svg>
+      </button>
+    </div>
+    <div class="forgot-password">
+      <a href="#">Lupa kata sandi?</a>
+    </div>
+    <button type="submit" disabled>Masuk</button>
+  </form>
+</div>
+
+<div class="help-section">
+  Butuh bantuan?
+  <button type="button" onclick="alert('Hubungi Kami clicked')">Hubungi Kami</button>
+</div>
+
+<script>
+  // Real-time clock for top-left
+  function updateTime() {
+    const timeElem = document.getElementById('time');
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    timeElem.textContent = `${h}:${m}:${s}`;
+  }
+  setInterval(updateTime, 1000);
+  updateTime();
+
+  // Toggle password visibility
+  const togglePwdBtn = document.querySelector('.toggle-password');
+  const passwordInput = document.getElementById('password');
+  togglePwdBtn.addEventListener('click', () => {
+    if(passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+    } else {
+      passwordInput.type = 'password';
+    }
+  });
+</script>
+
+</body>
+</html>
